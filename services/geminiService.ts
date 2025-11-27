@@ -1,13 +1,33 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AnalysisStats, AiInsight } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export const analyzeEventWithGemini = async (
   filename: string,
   stats: AnalysisStats
 ): Promise<AiInsight> => {
   
+  let apiKey: string | undefined;
+
+  try {
+    // Safely attempt to access the environment variable
+    // This prevents ReferenceError if 'process' is not defined in the browser environment
+    apiKey = process.env.API_KEY;
+  } catch (e) {
+    console.warn("process.env is not defined");
+  }
+
+  if (!apiKey) {
+    console.warn("API Key is missing. Skipping AI analysis.");
+    return {
+      eventName: filename,
+      eventDate: "Unknown Date",
+      summary: "AI analysis unavailable. Please configure the API_KEY environment variable.",
+      complianceNote: "Integration requires a valid Gemini API key."
+    };
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
+
   const prompt = `
     I have an SPL (Sound Pressure Level) log file.
     
