@@ -137,14 +137,15 @@ const Dashboard: React.FC<DashboardProps> = ({ log, onReset }) => {
       </div>
 
       {/* Main Content Split: Chart & Top 3 List */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Added 'print:block' to force stacking behavior in print mode */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 print:block">
         {/* Chart Column */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 print:w-full print:mb-8">
            <SplChart data={log.data} stats={stats} />
         </div>
 
         {/* Top 3 List Column */}
-        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 h-full flex flex-col">
+        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 h-full flex flex-col print:border-slate-300">
             <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-red-500" />
                 Top 3 Loudest Moments

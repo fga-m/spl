@@ -17,7 +17,7 @@ const SplChart: React.FC<SplChartProps> = ({ data, stats }) => {
   const maxDomain = Math.ceil(stats.maxSpl + 5);
 
   return (
-    <div className="w-full h-[400px] bg-slate-900/50 rounded-xl p-4 border border-slate-800">
+    <div className="w-full h-[400px] bg-slate-900/50 rounded-xl p-4 border border-slate-800 overflow-hidden">
       <h3 className="text-lg font-semibold text-slate-200 mb-4 px-2">SPL Over Time</h3>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
