@@ -85,9 +85,29 @@ export const parseSplLog = (content: string): { data: SplDataPoint[], stats: Ana
   const totalSpl = data.reduce((acc, curr) => acc + curr.value, 0);
   const averageSpl = totalSpl / data.length;
   
-  // Sort by value for Peaks
+  // Sort by value to find peaks
   const sortedByValue = [...data].sort((a, b) => b.value - a.value);
-  const top3Loudest = sortedByValue.slice(0, 3);
+  
+  // Identify Top 3 Distinct Loudest Moments
+  // We apply a 5-minute (300 seconds) buffer around each identified peak 
+  // to ensure we capture distinct events rather than consecutive seconds of the same event.
+  const top3Loudest: SplDataPoint[] = [];
+  const bufferSeconds = 300;
+
+  for (const candidate of sortedByValue) {
+    // Stop if we have found 3 peaks
+    if (top3Loudest.length >= 3) break;
+
+    // Check if this candidate is too close (in time) to any already selected peak
+    const isTooClose = top3Loudest.some(existing => 
+      Math.abs(existing.seconds - candidate.seconds) < bufferSeconds
+    );
+
+    // If it is a distinct moment, add it
+    if (!isTooClose) {
+      top3Loudest.push(candidate);
+    }
+  }
   
   const maxSpl = sortedByValue[0].value;
   const minSpl = sortedByValue[sortedByValue.length - 1].value;
