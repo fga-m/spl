@@ -6,15 +6,7 @@ export const analyzeEventWithGemini = async (
   stats: AnalysisStats
 ): Promise<AiInsight> => {
   
-  let apiKey: string | undefined;
-
-  try {
-    // Safely attempt to access the environment variable
-    // This prevents ReferenceError if 'process' is not defined in the browser environment
-    apiKey = process.env.API_KEY;
-  } catch (e) {
-    console.warn("process.env is not defined");
-  }
+  const apiKey = process.env.API_KEY;
 
   if (!apiKey) {
     console.warn("API Key is missing. Skipping AI analysis.");

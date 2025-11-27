@@ -1,16 +1,15 @@
 import React from 'react';
-import { ParsedLog, AiInsight } from '../types';
+import { ParsedLog } from '../types';
 import SplChart from './SplChart';
-import { Calendar, Clock, Activity, AlertTriangle, Music, Volume2, FileText, ShieldCheck } from 'lucide-react';
+import { Calendar, Clock, Volume2, Music, AlertTriangle, FileText, ShieldCheck } from 'lucide-react';
 
 interface DashboardProps {
   log: ParsedLog;
-  insight: AiInsight | null;
   onReset: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ log, insight, onReset }) => {
-  const { stats } = log;
+const Dashboard: React.FC<DashboardProps> = ({ log, onReset }) => {
+  const { stats, eventName, eventDate } = log;
 
   // Determine safety colors
   const getSafetyColor = (level: string) => {
@@ -24,22 +23,22 @@ const Dashboard: React.FC<DashboardProps> = ({ log, insight, onReset }) => {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-700 slide-in-from-bottom-4">
-      {/* Header Section: Event and Date (from Filename/AI) */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-8 justify-between">
-        <div className="flex-1 space-y-4">
+      {/* Header Section: Event and Date */}
+      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-8 justify-between items-center">
+        <div className="flex-1 space-y-4 w-full">
           <div className="flex items-center gap-2 text-blue-400 mb-1">
              <FileText className="w-5 h-5" />
-             <span className="text-sm font-semibold tracking-wide uppercase">File Analysis</span>
+             <span className="text-sm font-semibold tracking-wide uppercase">Analysis Report</span>
           </div>
           
           <div>
             <h1 className="text-3xl md:text-5xl font-bold text-white mb-2 leading-tight">
-              {insight ? insight.eventName : log.fileName}
+              {eventName}
             </h1>
             <div className="flex flex-wrap items-center gap-6 text-slate-400 text-lg">
               <div className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-blue-500" />
-                <span className="font-medium text-slate-200">{insight ? insight.eventDate : "Unknown Date"}</span>
+                <span className="font-medium text-slate-200">{eventDate}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5 text-blue-500" />
@@ -48,22 +47,9 @@ const Dashboard: React.FC<DashboardProps> = ({ log, insight, onReset }) => {
             </div>
           </div>
         </div>
-        
-        {insight && (
-            <div className="w-full md:w-1/2 lg:w-1/3 bg-slate-800/50 border border-slate-700 p-5 rounded-xl">
-              <div className="flex items-center gap-2 text-purple-400 mb-3">
-                  <Activity className="w-5 h-5" />
-                  <h4 className="font-semibold uppercase tracking-wider text-xs">AI Summary</h4>
-              </div>
-              <p className="text-slate-200 text-sm mb-3 leading-relaxed">{insight.summary}</p>
-              <p className="text-slate-400 text-xs italic border-l-2 border-slate-600 pl-3">
-                  "{insight.complianceNote}"
-              </p>
-            </div>
-        )}
       </div>
 
-      {/* Stats Grid - Updated to 4 columns */}
+      {/* Stats Grid - 4 columns */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         
         {/* 1. Average SPL */}
@@ -77,7 +63,7 @@ const Dashboard: React.FC<DashboardProps> = ({ log, insight, onReset }) => {
           </div>
         </div>
 
-        {/* 2. Safety Assessment (New) */}
+        {/* 2. Safety Assessment */}
          <div className={`
             border p-8 rounded-2xl relative overflow-hidden flex flex-col justify-center min-h-[160px]
             ${safetyColor === 'red' ? 'bg-red-950/30 border-red-500/30' : 

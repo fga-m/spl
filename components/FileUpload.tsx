@@ -66,7 +66,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, appState }) => {
           <div className="flex flex-col items-center animate-pulse">
             <Loader2 className="w-16 h-16 text-blue-400 animate-spin mb-4" />
             <h3 className="text-xl font-semibold text-white">Analyzing Log...</h3>
-            <p className="text-slate-400 mt-2">Parsing data and consulting AI</p>
+            <p className="text-slate-400 mt-2">Processing acoustic data</p>
           </div>
         ) : (
           <>

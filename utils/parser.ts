@@ -143,3 +143,29 @@ export const downsampleData = (data: SplDataPoint[], targetCount: number = 2000)
   const step = Math.ceil(data.length / targetCount);
   return data.filter((_, index) => index % step === 0);
 };
+
+export const extractMetadataFromFilename = (filename: string): { eventName: string, eventDate: string } => {
+  const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
+  let eventName = nameWithoutExt;
+  let eventDate = "Unknown Date";
+
+  // Regex for YYYYMMDD (e.g., 20250918) - looks for 20xx or 19xx followed by valid month/day
+  const dateRegex = /(20\d{2}|19\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])/;
+  const match = nameWithoutExt.match(dateRegex);
+
+  if (match) {
+    const [fullMatch, year, month, day] = match;
+    eventDate = `${year}-${month}-${day}`;
+    // Remove the date from the name to clean up the event name
+    eventName = nameWithoutExt.replace(fullMatch, '').trim();
+    // Remove leading/trailing hyphens or underscores that might have connected the date
+    eventName = eventName.replace(/^[-_]+|[-_]+$/g, '').trim();
+  }
+
+  // Fallback if eventName became empty (e.g. filename was just the date)
+  if (!eventName) {
+      eventName = nameWithoutExt;
+  }
+  
+  return { eventName, eventDate };
+};

@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { AppState, ParsedLog, AiInsight } from './types';
-import { parseSplLog } from './utils/parser';
-import { analyzeEventWithGemini } from './services/geminiService';
+import { AppState, ParsedLog } from './types';
+import { parseSplLog, extractMetadataFromFilename } from './utils/parser';
 import FileUpload from './components/FileUpload';
 import Dashboard from './components/Dashboard';
 
 const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>(AppState.IDLE);
   const [parsedLog, setParsedLog] = useState<ParsedLog | null>(null);
-  const [aiInsight, setAiInsight] = useState<AiInsight | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleFileSelect = async (file: File) => {
@@ -19,19 +17,21 @@ const App: React.FC = () => {
     reader.onload = async (e) => {
       const content = e.target?.result as string;
       try {
-        // 1. Local Parsing
+        // 1. Local Parsing for data and stats
         const parsed = parseSplLog(content);
+        
+        // 2. Extract Metadata from filename (date format: YYYYMMDD)
+        const { eventName, eventDate } = extractMetadataFromFilename(file.name);
+
         const logData: ParsedLog = {
           fileName: file.name,
+          eventName,
+          eventDate,
           data: parsed.data,
           stats: parsed.stats
         };
-        setParsedLog(logData);
-
-        // 2. AI Analysis
-        const insight = await analyzeEventWithGemini(file.name, parsed.stats);
-        setAiInsight(insight);
         
+        setParsedLog(logData);
         setAppState(AppState.COMPLETE);
       } catch (err: any) {
         console.error(err);
@@ -45,7 +45,6 @@ const App: React.FC = () => {
   const resetApp = () => {
     setAppState(AppState.IDLE);
     setParsedLog(null);
-    setAiInsight(null);
     setErrorMsg(null);
   };
 
@@ -71,7 +70,7 @@ const App: React.FC = () => {
                Turn raw data into <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">insight.</span>
              </h2>
              <p className="text-slate-400 text-lg mb-12">
-               Upload your REW SPL logs to visualize loudness trends, identify peak moments, and get AI-powered event summaries.
+               Upload your REW SPL logs to visualize loudness trends, identify peak moments, and generate reports.
              </p>
              <FileUpload onFileSelect={handleFileSelect} appState={appState} />
            </div>
@@ -96,13 +95,13 @@ const App: React.FC = () => {
 
         {appState === AppState.COMPLETE && parsedLog && (
            <div className="w-full">
-             <Dashboard log={parsedLog} insight={aiInsight} onReset={resetApp} />
+             <Dashboard log={parsedLog} onReset={resetApp} />
            </div>
         )}
       </main>
       
       <footer className="mt-12 text-center text-slate-600 text-sm">
-        <p>&copy; {new Date().getFullYear()} FGAM SPL Analyser. Powered by Gemini.</p>
+        <p>&copy; {new Date().getFullYear()} FGAM SPL Analyser.</p>
       </footer>
     </div>
   );

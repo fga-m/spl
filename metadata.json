@@ -1,5 +1,5 @@
 {
   "name": "FGAM SPL Analyser",
-  "description": "Analyze REW SPL logs to extract key acoustic metrics, identify loud moments, and generate AI-powered insights.",
+  "description": "Analyze REW SPL logs to extract key acoustic metrics and identify loud moments.",
   "requestFramePermissions": []
 }

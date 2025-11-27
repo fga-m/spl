@@ -18,17 +18,19 @@ export interface AnalysisStats {
   safetyLevel: SafetyLevel;
 }
 
-export interface ParsedLog {
-  fileName: string;
-  data: SplDataPoint[];
-  stats: AnalysisStats;
-}
-
 export interface AiInsight {
   eventName: string;
   eventDate: string;
   summary: string;
   complianceNote: string;
+}
+
+export interface ParsedLog {
+  fileName: string;
+  eventName: string;
+  eventDate: string;
+  data: SplDataPoint[];
+  stats: AnalysisStats;
 }
 
 export enum AppState {
