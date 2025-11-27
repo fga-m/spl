@@ -1,7 +1,7 @@
 import React from 'react';
 import { ParsedLog } from '../types';
 import SplChart from './SplChart';
-import { Calendar, Clock, Volume2, Music, AlertTriangle, FileText, ShieldCheck } from 'lucide-react';
+import { Calendar, Clock, Volume2, Music, AlertTriangle, FileText, ShieldCheck, Printer } from 'lucide-react';
 
 interface DashboardProps {
   log: ParsedLog;
@@ -21,14 +21,28 @@ const Dashboard: React.FC<DashboardProps> = ({ log, onReset }) => {
   };
   const safetyColor = getSafetyColor(stats.safetyLevel);
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-700 slide-in-from-bottom-4">
       {/* Header Section: Event and Date */}
       <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-8 justify-between items-center">
         <div className="flex-1 space-y-4 w-full">
-          <div className="flex items-center gap-2 text-blue-400 mb-1">
-             <FileText className="w-5 h-5" />
-             <span className="text-sm font-semibold tracking-wide uppercase">Analysis Report</span>
+          <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-2 text-blue-400 mb-1">
+                <FileText className="w-5 h-5" />
+                <span className="text-sm font-semibold tracking-wide uppercase">Analysis Report</span>
+              </div>
+              <button 
+                onClick={handlePrint}
+                className="no-print flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg transition-colors border border-slate-700"
+                title="Print Report"
+              >
+                <Printer className="w-4 h-4" />
+                <span className="text-sm font-medium">Print</span>
+              </button>
           </div>
           
           <div>
@@ -156,7 +170,7 @@ const Dashboard: React.FC<DashboardProps> = ({ log, onReset }) => {
                 ))}
             </div>
             
-            <div className="mt-8 pt-6 border-t border-slate-800">
+            <div className="mt-8 pt-6 border-t border-slate-800 no-print">
                 <button 
                     onClick={onReset}
                     className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors text-sm font-semibold shadow-lg shadow-blue-500/20"

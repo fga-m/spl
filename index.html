@@ -27,6 +27,71 @@
       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #64748b; 
       }
+
+      /* Print Styles for A4 */
+      @media print {
+        @page {
+          size: A4;
+          margin: 10mm;
+        }
+
+        body {
+          background-color: white !important;
+          color: black !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+
+        /* Hide non-printable UI elements */
+        .no-print {
+          display: none !important;
+        }
+
+        /* Reset layout containers */
+        .min-h-screen {
+          min-height: auto !important;
+          padding: 0 !important;
+        }
+        
+        /* Invert Dark Theme Cards to Light Theme for Print */
+        .bg-slate-900, .bg-slate-900\/80, .bg-slate-900\/50, .bg-slate-800 {
+          background-color: white !important;
+          border: 1px solid #cbd5e1 !important; /* slate-300 */
+          box-shadow: none !important;
+          color: black !important;
+        }
+
+        /* Invert Text Colors */
+        .text-white, .text-slate-200, .text-slate-300, .text-slate-400 {
+          color: #0f172a !important; /* slate-900 */
+        }
+        
+        .text-blue-400, .text-blue-500 {
+          color: #2563eb !important; /* blue-600 */
+        }
+        
+        /* Fix Safety Level Colors for Print (Light backgrounds) */
+        [class*="bg-red-950"] { background-color: #fff1f2 !important; border-color: #fca5a5 !important; }
+        [class*="text-red-400"] { color: #dc2626 !important; }
+        
+        [class*="bg-yellow-950"] { background-color: #fefce8 !important; border-color: #fde047 !important; }
+        [class*="text-yellow-400"], [class*="text-yellow-500"] { color: #ca8a04 !important; }
+
+        [class*="bg-green-950"] { background-color: #f0fdf4 !important; border-color: #86efac !important; }
+        [class*="text-green-400"] { color: #16a34a !important; }
+
+        /* Chart Adjustments */
+        .recharts-cartesian-grid-horizontal line, .recharts-cartesian-grid-vertical line {
+          stroke: #e2e8f0 !important;
+        }
+        .recharts-text {
+          fill: #334155 !important;
+        }
+        /* Ensure axes lines are visible on white paper */
+        .recharts-layer path.recharts-curve {
+            stroke: #2563eb !important;
+        }
+      }
     </style>
   <script type="importmap">
 {
